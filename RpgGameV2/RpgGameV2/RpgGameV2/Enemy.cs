@@ -19,10 +19,10 @@ namespace RpgGameV2
         protected float health;
         private int level;
         private int gameSize = Game1.gameSize;
-        protected int moveSpeed;
+        protected float moveSpeed;
         private Texture2D healthBar;
         protected int frameWidth;
-        protected int frameHeight;
+        protected int frameHeight; 
         protected Point sheetSize;
 
         private enum Direction
@@ -34,36 +34,81 @@ namespace RpgGameV2
             Down
         }
         Direction currentDirection;
+        Direction[] randomDirection = { Direction.Right, Direction.Left, Direction.Up, Direction.Down };
+        Random random = new Random();
 
-        public Enemy(Rectangle position, Point maxPos, Point minPos)
+        public Enemy(Point position, Point maxPos, Point minPos)
         {
-            this.position = position;
+            this.position = new Rectangle(position.X * gameSize, position.Y * gameSize, gameSize, gameSize);
             isAlive = true;
             currentTexture = new Rectangle(0, 0, frameWidth, frameHeight);
             this.maxPos = maxPos;
             this.minPos = minPos;
+            currentDirection = Direction.Right;
         }
 
         public void Update(GameTime gameTime)
         {
-
+            //TO ADD: Fix 100% collision rate in corner (checking wrong tile?).
+            currentTexture.Width = frameWidth;
+            currentTexture.Height = frameHeight;
             #region DirectionSwitcher(Based on the current direction "selected" keeps walking that way until reaching a tile.)
             switch (currentDirection)
             {
                 case Direction.Right:
-                    position.X += 1;
-                    walkAnim(gameTime);
                     currentTexture.Y = 96;
-                    if (position.X > maxPos.X)
-                        currentDirection = Direction.Left;
+
+                    if (Maps.MapOne[(position.Y / gameSize), (position.X / gameSize) + 1].isCollidable)
+                        currentDirection = randomDirection[random.Next(0, 3)];
+                    else
+                    {
+                        walkAnim(gameTime);
+                        position.X += (int)moveSpeed;
+                    }
                     break;
                 case Direction.Left:
-                    position.Y -= 1;
-                    walkAnim(gameTime);
                     currentTexture.Y = 48;
-                    if (position.X < minPos.X)
-                        currentDirection = Direction.Right;
+
+                    if (Maps.MapOne[(position.Y / gameSize), (position.X / gameSize)].isCollidable)
+                        currentDirection = randomDirection[random.Next(0, 3)];
+                    else
+                    {
+                        walkAnim(gameTime);
+                        position.X -= (int)moveSpeed;
+                    }
                     break;
+                case Direction.Up:
+                    currentTexture.Y = 144;
+
+                    if (Maps.MapOne[(position.Y / gameSize), (position.X / gameSize)].isCollidable)
+                    {
+                        for (int loop = 0; loop == 0; )
+                        {
+                            int dir = random.Next(0,3);
+                            if (dir != 2)
+                                loop = 1;
+                        }
+                        currentDirection = randomDirection[random.Next(0, 3)];
+
+                    }
+                    else
+                    {
+                        walkAnim(gameTime);
+                        position.Y -= (int)moveSpeed;
+                    }
+                    break;
+                case Direction.Down:
+                    currentTexture.Y = 0;
+
+                    if (Maps.MapOne[(position.Y / gameSize) + 1, (position.X / gameSize)].isCollidable)
+                        currentDirection = randomDirection[random.Next(0, 3)];
+                    else
+                    {
+                        walkAnim(gameTime);
+                        position.Y += (int)moveSpeed;
+                    }
+                    break;
+
             }
             #endregion
         }
@@ -85,7 +130,7 @@ namespace RpgGameV2
             {
                 timer = 0;
                 currentTexture.X += frameWidth;
-                if (currentTexture.X > sheetSize.X)
+                if (currentTexture.X > (sheetSize.X - 1) * gameSize)
                     currentTexture.X = 0;
             }
         }

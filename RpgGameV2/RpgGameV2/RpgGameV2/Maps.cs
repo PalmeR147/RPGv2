@@ -67,11 +67,8 @@ namespace RpgGameV2
             {null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null},
         };
 
-        public static Texture2D baseTex;
-
         public static void CreateMaps(ContentManager content)
         {
-            baseTex = content.Load<Texture2D>("textures/TileSetBase");
             for (int y = 0; y < MapOne.GetLength(0); y++)
             {
                 for (int x = 0; x < MapOne.GetLength(1); x++)

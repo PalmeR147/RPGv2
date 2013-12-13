@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-
+//Fix movespeed & refine maxPos minPos for enemies.
 namespace RpgGameV2
 {
     /// <summary>
@@ -43,6 +43,7 @@ namespace RpgGameV2
 
             playerOne = new Player(this.Content);
             Maps.CreateMaps(this.Content);
+            MonsterMap.CreateMaps(this.Content);
             // TODO: use this.Content to load your game content here
 
         }
@@ -60,7 +61,7 @@ namespace RpgGameV2
 
             // TODO: Add your update logic here
             playerOne.Update(gameTime);
-            Maps.CreateMaps(Content);
+            MonsterMap.UpdateMobs(gameTime);
             base.Update(gameTime);
         }
 
@@ -71,8 +72,10 @@ namespace RpgGameV2
             // TODO: Add your drawing code here
             Maps.DrawTiles(spriteBatch);
 
-            playerOne.Draw(spriteBatch);
+            MonsterMap.DrawMobs(spriteBatch);
 
+
+            playerOne.Draw(spriteBatch);
             base.Draw(gameTime);
         }
     }

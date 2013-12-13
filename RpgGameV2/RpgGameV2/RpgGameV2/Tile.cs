@@ -38,6 +38,7 @@ namespace RpgGameV2
 
             position = new Rectangle(xPos * gameSize, yPos * gameSize, gameSize, gameSize);
             mapTexture = content.Load<Texture2D>("textures/TileSetBase");
+            
             this.isCollidable = isCollidable;
         }
 
